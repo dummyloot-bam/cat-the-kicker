@@ -75,6 +75,9 @@ canvas {
     border: 2px solid rgba(255,255,255,0.2);
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     backdrop-filter: blur(10px);
+    max-height: 95vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 h1 {
@@ -341,6 +344,9 @@ button:active {
     #hud { top: 15px; left: 15px; right: 15px; }
     .score-display { font-size: 1.2rem; padding: 8px 20px; }
     #lives-display { font-size: 1.5rem; }
+    .panel { padding: 1.5rem; max-height: 100vh; border-radius: 15px; }
+    h1 { font-size: 2rem; margin-bottom: 10px; }
+    .leaderboard-section { margin-top: 15px; }
 }
 
 /* Orientation Warning */
