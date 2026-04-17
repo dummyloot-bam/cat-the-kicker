@@ -22,9 +22,18 @@
         <div id="start-screen" class="overlay">
             <div class="panel">
                 <h1>Cat Kicker</h1>
+                <div class="input-group">
+                    <input type="text" id="player-name" placeholder="Enter your name" maxlength="15">
+                </div>
                 <p><strong>DESKTOP:</strong> Up/Down Arrows to Move • SPACE to Swipe</p>
                 <p><strong>MOBILE:</strong> Use on-screen buttons</p>
                 <button id="start-btn" class="primary">Start Game</button>
+                <div class="leaderboard-section">
+                    <h3>Top Scores</h3>
+                    <ul id="start-leaderboard-list" class="leaderboard-list">
+                        <!-- Leaderboard items go here -->
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -32,6 +41,12 @@
             <div class="panel">
                 <h1>Game Over</h1>
                 <p>Final Score: <span id="final-score">0</span></p>
+                <div class="leaderboard-section">
+                    <h3>Top Scores</h3>
+                    <ul id="go-leaderboard-list" class="leaderboard-list">
+                        <!-- Leaderboard items go here -->
+                    </ul>
+                </div>
                 <div class="button-group">
                     <button id="restart-btn" class="primary">Restart</button>
                     <button id="quit-btn" class="secondary">Quit</button>
