@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cat Kicker Arcade</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        
+        <!-- UI Overlays -->
+        <div id="start-screen" class="overlay">
+            <div class="panel">
+                <h1>Cat Kicker</h1>
+                <p><strong>DESKTOP:</strong> Up/Down Arrows to Move • SPACE to Swipe</p>
+                <p><strong>MOBILE:</strong> Use on-screen buttons</p>
+                <button id="start-btn" class="primary">Start Game</button>
+            </div>
+        </div>
+
+        <div id="game-over-screen" class="overlay hidden">
+            <div class="panel">
+                <h1>Game Over</h1>
+                <p>Final Score: <span id="final-score">0</span></p>
+                <div class="button-group">
+                    <button id="restart-btn" class="primary">Restart</button>
+                    <button id="quit-btn" class="secondary">Quit</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Score HUD -->
+        <div id="hud">
+            <div class="hud-left">
+                <div class="score-display">Score: <span id="score">0</span></div>
+                <div id="combo-display" class="hidden">Combo x<span id="combo">0</span>!</div>
+            </div>
+            <div class="hud-right">
+                <div id="lives-display">❤️❤️❤️</div>
+            </div>
+        </div>
+
+        <!-- Mobile Controls -->
+        <div id="mobile-controls">
+            <div id="btn-up" class="mobile-btn">▲</div>
+            <div id="btn-down" class="mobile-btn">▼</div>
+            <div id="btn-kick" class="mobile-action-btn">🐾<br>SWIPE</div>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
