@@ -55,16 +55,16 @@ const AudioSys = {
         }
         this.startBGM();
     },
-    playTone(freq, type, duration, vol=0.1) {
+    playTone(freq, type, duration, vol = 0.1) {
         if (!this.ctx) return;
         const osc = this.ctx.createOscillator();
         const gain = this.ctx.createGain();
         osc.type = type;
         osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
-        
+
         gain.gain.setValueAtTime(vol, this.ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
-        
+
         osc.connect(gain);
         gain.connect(this.ctx.destination);
         osc.start();
@@ -75,26 +75,26 @@ const AudioSys = {
         // Super simple retro arpeggio loop
         const notes = [300, 400, 500, 600, 500, 400];
         let noteIndex = 0;
-        
+
         const playNext = () => {
             if (gameState !== 'PLAYING') {
                 setTimeout(playNext, 200);
                 return;
             }
-            if(!this.ctx) return;
+            if (!this.ctx) return;
             const osc = this.ctx.createOscillator();
             const gain = this.ctx.createGain();
             osc.type = 'triangle';
             osc.frequency.value = notes[noteIndex];
-            
+
             gain.gain.setValueAtTime(0.03, this.ctx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.2);
-            
+
             osc.connect(gain);
             gain.connect(this.ctx.destination);
             osc.start();
             osc.stop(this.ctx.currentTime + 0.2);
-            
+
             noteIndex = (noteIndex + 1) % notes.length;
             setTimeout(playNext, 200);
         };
@@ -102,7 +102,7 @@ const AudioSys = {
         this.bgmNode = true;
     },
     swipe() { this.playTone(300, 'sine', 0.15, 0.1); this.playTone(400, 'triangle', 0.1, 0.05); },
-    hit() { 
+    hit() {
         this.playTone(600, 'square', 0.1, 0.1);
         setTimeout(() => this.playTone(800, 'square', 0.1, 0.1), 50);
         setTimeout(() => this.playTone(1200, 'square', 0.2, 0.1), 100);
@@ -140,17 +140,17 @@ window.addEventListener('keyup', (e) => {
 const bindBtn = (el, key) => {
     const press = (e) => {
         e.preventDefault();
-        if(key === 'space' && !Keys.space && gameState === 'PLAYING') cat.swipe();
+        if (key === 'space' && !Keys.space && gameState === 'PLAYING') cat.swipe();
         Keys[key] = true;
     };
     const release = (e) => {
         e.preventDefault();
         Keys[key] = false;
     };
-    el.addEventListener('touchstart', press, {passive: false});
-    el.addEventListener('touchend', release, {passive: false});
-    el.addEventListener('mousedown', press, {passive: false});
-    el.addEventListener('mouseup', release, {passive: false});
+    el.addEventListener('touchstart', press, { passive: false });
+    el.addEventListener('touchend', release, { passive: false });
+    el.addEventListener('mousedown', press, { passive: false });
+    el.addEventListener('mouseup', release, { passive: false });
 };
 bindBtn(btnUp, 'up');
 bindBtn(btnDown, 'down');
@@ -172,7 +172,7 @@ class Cat {
 
         if (Keys.up) this.y -= this.speed * dt;
         if (Keys.down) this.y += this.speed * dt;
-        
+
         // Bounds
         this.y = Math.max(this.radius + 20, Math.min(GAME_H - this.radius - 20, this.y));
 
@@ -195,7 +195,7 @@ class Cat {
         this.state = 'swipe';
         this.stateTimer = 0.15;
         AudioSys.swipe();
-        
+
         // Check hit
         if (!ball.kicked) {
             const dist = Math.abs(this.y - ball.y);
@@ -212,7 +212,7 @@ class Cat {
     render(ctx) {
         ctx.save();
         ctx.translate(this.x, this.y);
-        
+
         // Body (Orange Cat)
         ctx.fillStyle = '#ff9800';
         ctx.beginPath();
@@ -229,7 +229,7 @@ class Cat {
         ctx.fillStyle = '#ff9800';
         ctx.fill();
         ctx.stroke();
-        
+
         // Inner ears
         ctx.fillStyle = '#fce4ec';
         ctx.beginPath();
@@ -240,27 +240,27 @@ class Cat {
         // White belly/face highlight
         ctx.fillStyle = '#fff';
         ctx.beginPath();
-        ctx.arc(15, 10, 25, 0, Math.PI*2);
+        ctx.arc(15, 10, 25, 0, Math.PI * 2);
         ctx.fill();
 
         // Eyes setup (facing right)
         ctx.fillStyle = '#fff';
         ctx.beginPath();
-        ctx.arc(15, -10, 12, 0, Math.PI*2);
-        ctx.arc(32, -10, 9, 0, Math.PI*2);
+        ctx.arc(15, -10, 12, 0, Math.PI * 2);
+        ctx.arc(32, -10, 9, 0, Math.PI * 2);
         ctx.fill();
-        
+
         // Pupils
         ctx.fillStyle = '#000';
         let pupilY = -10;
         let pSize1 = 6, pSize2 = 4;
-        
+
         let expressionOffset = 0;
 
         if (this.state === 'sad') {
             pupilY = -5; // look down
             ctx.fillStyle = '#01579b'; // tear
-            ctx.beginPath(); ctx.arc(15, 5, 4, 0, Math.PI*2); ctx.fill();
+            ctx.beginPath(); ctx.arc(15, 5, 4, 0, Math.PI * 2); ctx.fill();
             expressionOffset = 5;
             ctx.fillStyle = '#000';
         } else if (this.state === 'happy') {
@@ -271,20 +271,20 @@ class Cat {
         }
 
         ctx.beginPath();
-        ctx.arc(18, pupilY, pSize1, 0, Math.PI*2);
-        ctx.arc(34, pupilY, pSize2, 0, Math.PI*2);
+        ctx.arc(18, pupilY, pSize1, 0, Math.PI * 2);
+        ctx.arc(34, pupilY, pSize2, 0, Math.PI * 2);
         ctx.fill();
 
         // Nose/Mouth
         ctx.fillStyle = '#ff4081';
         ctx.beginPath();
-        ctx.arc(38, 5 + expressionOffset, 5, 0, Math.PI*2);
+        ctx.arc(38, 5 + expressionOffset, 5, 0, Math.PI * 2);
         ctx.fill();
-        
+
         ctx.strokeStyle = '#000';
         ctx.lineWidth = 2;
         if (this.state === 'sad') {
-            ctx.beginPath(); ctx.arc(38, 15 + expressionOffset, 6, Math.PI, Math.PI*2); ctx.stroke();
+            ctx.beginPath(); ctx.arc(38, 15 + expressionOffset, 6, Math.PI, Math.PI * 2); ctx.stroke();
         } else {
             ctx.beginPath(); ctx.arc(38, 10 + expressionOffset, 6, 0, Math.PI); ctx.stroke();
         }
@@ -294,15 +294,15 @@ class Cat {
         ctx.strokeStyle = '#e65100';
         ctx.lineWidth = 3;
         ctx.beginPath();
-        ctx.arc(20 + this.pawExt, 20, 14, 0, Math.PI*2);
+        ctx.arc(20 + this.pawExt, 20, 14, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
-        
+
         // Paw details (beans)
         ctx.fillStyle = '#ff4081';
-        ctx.beginPath(); ctx.arc(26 + this.pawExt, 20, 3, 0, Math.PI*2); ctx.fill();
-        ctx.beginPath(); ctx.arc(20 + this.pawExt, 14, 3, 0, Math.PI*2); ctx.fill();
-        ctx.beginPath(); ctx.arc(14 + this.pawExt, 20, 3, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(26 + this.pawExt, 20, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(20 + this.pawExt, 14, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(14 + this.pawExt, 20, 3, 0, Math.PI * 2); ctx.fill();
 
         ctx.restore();
     }
@@ -319,12 +319,12 @@ class Ball {
         this.kicked = false;
         this.vx = 0;
         this.vy = 0;
-        this.color = ['#ff5252', '#448aff', '#69f0ae', '#ffd740'][Math.floor(Math.random()*4)];
+        this.color = ['#ff5252', '#448aff', '#69f0ae', '#ffd740'][Math.floor(Math.random() * 4)];
         this.rotation = 0;
     }
     kick() {
         this.kicked = true;
-        this.vx = 1000 * (1 + (difficultyMultiplier-1)*0.3); // High speed
+        this.vx = 1000 * (1 + (difficultyMultiplier - 1) * 0.3); // High speed
         this.vy = (Math.random() - 0.5) * 150; // Curve
     }
     update(dt) {
@@ -344,7 +344,7 @@ class Ball {
                 // Check collision with target
                 const dx = this.x - target.x;
                 const dy = this.y - target.y;
-                const dist = Math.sqrt(dx*dx + dy*dy);
+                const dist = Math.sqrt(dx * dx + dy * dy);
                 if (dist < this.radius + target.radius) {
                     handleHit();
                 }
@@ -358,14 +358,14 @@ class Ball {
 
         ctx.fillStyle = this.color;
         ctx.beginPath();
-        ctx.arc(0, 0, this.radius, 0, Math.PI*2);
+        ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
         ctx.fill();
-        
+
         ctx.fillStyle = 'rgba(255,255,255,0.7)';
         ctx.beginPath();
-        ctx.arc(-5, -5, 5, 0, Math.PI*2);
+        ctx.arc(-5, -5, 5, 0, Math.PI * 2);
         ctx.fill();
-        
+
         // Arcade Pattern on ball
         ctx.strokeStyle = 'rgba(0,0,0,0.2)';
         ctx.lineWidth = 3;
@@ -377,7 +377,7 @@ class Ball {
         ctx.strokeStyle = '#000';
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.arc(0, 0, this.radius, 0, Math.PI*2);
+        ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
         ctx.stroke();
 
         ctx.restore();
@@ -390,12 +390,12 @@ class Target {
         this.y = GAME_H / 2;
         this.radius = 50;
         this.time = 0;
-        this.baseSpeed = 2.5; 
+        this.baseSpeed = 2.5;
     }
     update(dt) {
         this.x = GAME_W - 100; // keep relative pos
         this.time += dt * this.baseSpeed * difficultyMultiplier;
-        
+
         const amplitude = (GAME_H / 2) - this.radius - 30;
         // Complex movement: sine + smaller fast sine
         this.y = (GAME_H / 2) + Math.sin(this.time) * amplitude + Math.sin(this.time * 2.5) * 20;
@@ -403,7 +403,7 @@ class Target {
     render(ctx) {
         ctx.save();
         ctx.translate(this.x, this.y);
-        
+
         // Pulsing scale
         const scale = 1 + Math.sin(Date.now() / 100) * 0.05;
         ctx.scale(scale, scale);
@@ -411,22 +411,22 @@ class Target {
         // Glow
         ctx.shadowColor = '#ffff00';
         ctx.shadowBlur = 30;
-        
+
         // Rings
         const colors = ['#f44336', '#fff', '#f44336', '#fff', '#ffeb3b'];
-        for (let i=0; i<5; i++) {
+        for (let i = 0; i < 5; i++) {
             ctx.fillStyle = colors[i];
             ctx.beginPath();
-            ctx.arc(0, 0, this.radius - (i*10), 0, Math.PI*2);
+            ctx.arc(0, 0, this.radius - (i * 10), 0, Math.PI * 2);
             ctx.fill();
-            
+
             // stroke per ring
             ctx.shadowBlur = 0;
             ctx.strokeStyle = 'rgba(0,0,0,0.1)';
             ctx.lineWidth = 1;
             ctx.stroke();
         }
-        
+
         ctx.restore();
     }
 }
@@ -437,24 +437,24 @@ class ParticleSystem {
         this.floatingTexts = [];
     }
     spawnExplosion(x, y, color, count) {
-        for(let i=0; i<count; i++) {
+        for (let i = 0; i < count; i++) {
             this.particles.push({
                 x, y,
-                vx: (Math.random()-0.5) * 800,
-                vy: (Math.random()-0.5) * 800,
+                vx: (Math.random() - 0.5) * 800,
+                vy: (Math.random() - 0.5) * 800,
                 life: 1.0,
                 decay: Math.random() * 1.5 + 1.0,
-                color: color || ['#ffeb3b', '#69f0ae', '#ff5252', '#fff'][Math.floor(Math.random()*4)],
+                color: color || ['#ffeb3b', '#69f0ae', '#ff5252', '#fff'][Math.floor(Math.random() * 4)],
                 size: Math.random() * 10 + 5
             });
         }
     }
     spawnDust(x, y) {
-        for(let i=0; i<15; i++) {
+        for (let i = 0; i < 15; i++) {
             this.particles.push({
                 x, y,
-                vx: (Math.random()-0.5) * 200,
-                vy: (Math.random()-0.5) * 200,
+                vx: (Math.random() - 0.5) * 200,
+                vy: (Math.random() - 0.5) * 200,
                 life: 1.0,
                 decay: 2.0,
                 color: '#9e9e9e',
@@ -466,33 +466,33 @@ class ParticleSystem {
         this.floatingTexts.push({ x, y, text, color, life: 1.0 });
     }
     update(dt) {
-        for(let i=this.particles.length-1; i>=0; i--) {
+        for (let i = this.particles.length - 1; i >= 0; i--) {
             let p = this.particles[i];
             p.x += p.vx * dt;
             p.y += p.vy * dt;
             p.vy += 400 * dt; // gravity
             p.life -= dt * p.decay;
-            if(p.life <= 0) this.particles.splice(i, 1);
+            if (p.life <= 0) this.particles.splice(i, 1);
         }
-        for(let i=this.floatingTexts.length-1; i>=0; i--) {
+        for (let i = this.floatingTexts.length - 1; i >= 0; i--) {
             let ft = this.floatingTexts[i];
             ft.y -= 100 * dt; // float up
             ft.life -= dt * 1.5;
-            if(ft.life <= 0) this.floatingTexts.splice(i, 1);
+            if (ft.life <= 0) this.floatingTexts.splice(i, 1);
         }
     }
     render(ctx) {
-        for(let p of this.particles) {
+        for (let p of this.particles) {
             ctx.globalAlpha = Math.max(0, p.life);
             ctx.fillStyle = p.color;
             ctx.beginPath();
             // simple circle particle
-            ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI*2);
+            ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
             ctx.fill();
         }
         ctx.globalAlpha = 1.0;
 
-        for(let ft of this.floatingTexts) {
+        for (let ft of this.floatingTexts) {
             ctx.globalAlpha = Math.max(0, ft.life);
             ctx.fillStyle = ft.color;
             ctx.font = '900 30px Outfit';
@@ -507,8 +507,8 @@ class ParticleSystem {
 
 // Scenery
 const clouds = [];
-for(let i=0; i<8; i++) {
-    clouds.push({ x: Math.random()*2000, y: Math.random()*250, s: Math.random()*0.6+0.4 });
+for (let i = 0; i < 8; i++) {
+    clouds.push({ x: Math.random() * 2000, y: Math.random() * 250, s: Math.random() * 0.6 + 0.4 });
 }
 
 function renderBackground(ctx, dt) {
@@ -518,9 +518,9 @@ function renderBackground(ctx, dt) {
         c.x -= 40 * c.s * dt;
         if (c.x < -200) c.x = GAME_W + 200;
         ctx.beginPath();
-        ctx.arc(c.x, c.y, 40*c.s, 0, Math.PI*2);
-        ctx.arc(c.x+30*c.s, c.y-20*c.s, 50*c.s, 0, Math.PI*2);
-        ctx.arc(c.x+70*c.s, c.y, 40*c.s, 0, Math.PI*2);
+        ctx.arc(c.x, c.y, 40 * c.s, 0, Math.PI * 2);
+        ctx.arc(c.x + 30 * c.s, c.y - 20 * c.s, 50 * c.s, 0, Math.PI * 2);
+        ctx.arc(c.x + 70 * c.s, c.y, 40 * c.s, 0, Math.PI * 2);
         ctx.fill();
     });
 
@@ -535,12 +535,12 @@ function renderBackground(ctx, dt) {
     // Grass floor
     ctx.fillStyle = '#689f38';
     ctx.beginPath();
-    ctx.ellipse(GAME_W/2, GAME_H + 100, GAME_W, 200, 0, 0, Math.PI*2);
+    ctx.ellipse(GAME_W / 2, GAME_H + 100, GAME_W, 200, 0, 0, Math.PI * 2);
     ctx.fill();
-    
+
     ctx.fillStyle = '#8bc34a';
     ctx.beginPath();
-    ctx.ellipse(GAME_W/2, GAME_H + 130, GAME_W, 200, 0, 0, Math.PI*2);
+    ctx.ellipse(GAME_W / 2, GAME_H + 130, GAME_W, 200, 0, 0, Math.PI * 2);
     ctx.fill();
 }
 
@@ -560,9 +560,9 @@ function initGame() {
     gameState = 'PLAYING';
     startScreen.classList.add('hidden');
     gameOverScreen.classList.add('hidden');
-    
+
     AudioSys.init();
-    
+
     lastTime = performance.now();
     requestAnimationFrame(gameLoop);
 }
@@ -573,7 +573,7 @@ function handleHit() {
     combo++;
     let points = 10 + (combo > 1 ? combo * 5 : 0);
     score += points;
-    
+
     particles.spawnText(target.x - 20, target.y - 30, `+${points}`, '#ffeb3b');
 
     // Difficulty scale
@@ -593,7 +593,7 @@ function handleMiss() {
     particles.spawnDust(ball.x, ball.y);
     cat.react('sad');
     updateHUD();
-    
+
     if (lives <= 0) {
         triggerGameOver();
     } else {
@@ -604,19 +604,19 @@ function handleMiss() {
 function updateHUD() {
     scoreEl.innerText = score;
     comboEl.innerText = combo;
-    
+
     if (combo > 1) {
         // Pop animation reset trick
         comboDisplayEl.classList.remove('hidden');
         comboDisplayEl.style.animation = 'none';
         void comboDisplayEl.offsetWidth; // trigger reflow
-        comboDisplayEl.style.animation = 'popInOut 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards'; 
+        comboDisplayEl.style.animation = 'popInOut 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards';
     } else {
         comboDisplayEl.classList.add('hidden');
     }
 
     let hearts = '';
-    for(let i=0; i<lives; i++) hearts += '❤️';
+    for (let i = 0; i < lives; i++) hearts += '❤️';
     livesEl.innerText = hearts;
 }
 
@@ -644,13 +644,13 @@ function gameLoop(time) {
     // Update & Render Game Entities
     target.update(dt);
     target.render(ctx);
-    
+
     particles.update(dt);
     particles.render(ctx);
-    
+
     cat.update(dt);
     cat.render(ctx);
-    
+
     ball.update(dt);
     ball.render(ctx);
 
@@ -671,11 +671,26 @@ function renderIdleScreen() {
 requestAnimationFrame(renderIdleScreen);
 
 // Button Events
-startBtn.addEventListener('click', () => { AudioSys.init(); initGame(); });
+startBtn.addEventListener('click', () => {
+    AudioSys.init();
+
+    // Request full screen and lock orientation on mobile/tablets
+    if (window.innerWidth <= 900) {
+        const docEl = document.documentElement;
+        if (docEl.requestFullscreen) docEl.requestFullscreen().catch((err) => console.log(err));
+        else if (docEl.webkitRequestFullscreen) docEl.webkitRequestFullscreen().catch((err) => console.log(err));
+
+        if (screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock('landscape').catch((err) => console.log(err));
+        }
+    }
+
+    initGame();
+});
 restartBtn.addEventListener('click', () => { initGame(); });
-quitBtn.addEventListener('click', () => { 
-    gameState = 'START'; 
-    gameOverScreen.classList.add('hidden'); 
+quitBtn.addEventListener('click', () => {
+    gameState = 'START';
+    gameOverScreen.classList.add('hidden');
     startScreen.classList.remove('hidden');
     renderIdleScreen();
 });
