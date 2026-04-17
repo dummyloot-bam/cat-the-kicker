@@ -15,6 +15,48 @@ const comboEl = document.getElementById('combo');
 const comboDisplayEl = document.getElementById('combo-display');
 const livesEl = document.getElementById('lives-display');
 
+// Leaderboard & Player Name
+const playerNameInput = document.getElementById('player-name');
+const startLeaderboardList = document.getElementById('start-leaderboard-list');
+const goLeaderboardList = document.getElementById('go-leaderboard-list');
+let playerName = localStorage.getItem('catKickerPlayerName') || '';
+
+// Initialize player name input
+if (playerName) {
+    playerNameInput.value = playerName;
+}
+
+function getLeaderboard() {
+    const lb = localStorage.getItem('catKickerLeaderboard');
+    return lb ? JSON.parse(lb) : [];
+}
+
+function saveToLeaderboard(name, score) {
+    if (score <= 0) return;
+    const lb = getLeaderboard();
+    lb.push({ name: name || 'Anonymous', score: score });
+    lb.sort((a, b) => b.score - a.score);
+    const topLb = lb.slice(0, 5); // Keep top 5
+    localStorage.setItem('catKickerLeaderboard', JSON.stringify(topLb));
+    return topLb;
+}
+
+function renderLeaderboard(listElement, lb) {
+    listElement.innerHTML = '';
+    if (lb.length === 0) {
+        listElement.innerHTML = '<li><span class="lb-name">No scores yet!</span></li>';
+        return;
+    }
+    lb.forEach((entry, i) => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span class="lb-rank">#${i + 1}</span>
+                        <span class="lb-name">${entry.name}</span>
+                        <span class="lb-score">${entry.score}</span>`;
+        listElement.appendChild(li);
+    });
+}
+
+
 // Mobile buttons
 const btnUp = document.getElementById('btn-up');
 const btnDown = document.getElementById('btn-down');
@@ -625,6 +667,10 @@ function triggerGameOver() {
     AudioSys.gameOver();
     gameOverScreen.classList.remove('hidden');
     finalScoreEl.innerText = score;
+    
+    // Process and render leaderboard
+    const lb = saveToLeaderboard(playerName, score);
+    renderLeaderboard(goLeaderboardList, getLeaderboard());
 }
 
 // --- Main Loop ---
@@ -666,12 +712,16 @@ function renderIdleScreen() {
     renderBackground(ctx, 0.016);
     target.render(ctx);
     cat.render(ctx);
+    renderLeaderboard(startLeaderboardList, getLeaderboard());
 }
 // Render the first frame so it's not a blank canvas
 requestAnimationFrame(renderIdleScreen);
 
 // Button Events
 startBtn.addEventListener('click', () => {
+    playerName = playerNameInput.value.trim() || 'Anonymous';
+    localStorage.setItem('catKickerPlayerName', playerName);
+
     AudioSys.init();
 
     // Request full screen and lock orientation on mobile/tablets
