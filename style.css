@@ -140,6 +140,90 @@ button:active {
     box-shadow: 0 0px 0 #c2185b, 0 2px 5px rgba(0,0,0,0.2) !important;
 }
 
+.input-group {
+    margin-bottom: 20px;
+}
+
+#player-name {
+    padding: 12px 20px;
+    font-size: 1.2rem;
+    font-family: inherit;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 30px;
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+    text-align: center;
+    width: 250px;
+    max-width: 100%;
+    outline: none;
+    transition: all 0.2s;
+}
+
+#player-name::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+#player-name:focus {
+    border-color: var(--accent-color);
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 15px rgba(255, 235, 59, 0.3);
+}
+
+.leaderboard-section {
+    margin-top: 30px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
+    padding: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.leaderboard-section h3 {
+    margin: 0 0 10px 0;
+    color: var(--accent-color);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.leaderboard-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+}
+
+.leaderboard-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 1.1rem;
+}
+
+.leaderboard-list li:last-child {
+    border-bottom: none;
+}
+
+.leaderboard-list .lb-rank {
+    font-weight: 900;
+    color: var(--secondary-color);
+    width: 30px;
+}
+
+.leaderboard-list .lb-name {
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-right: 15px;
+}
+
+.leaderboard-list .lb-score {
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
 #hud {
     position: absolute;
     top: 25px;
